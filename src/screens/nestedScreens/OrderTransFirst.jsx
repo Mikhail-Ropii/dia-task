@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { useState, useCallback } from "react";
 import {
   SafeAreaView,
@@ -10,19 +9,19 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
+//Components
+import { Btn } from "../../components/Btn";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
-import {
-  Color,
-  FontFamily,
-  Padding,
-  Border,
-  FontSize,
-} from "../../../GlobalStyles";
+import DropDownPicker from "react-native-dropdown-picker";
+import MaskInput from "react-native-mask-input";
+import { phoneMask } from "../../helpers/phoneMask";
+
+import { Color, FontFamily, FontSize } from "../../../GlobalStyles";
 //SVG
 import Calendar from "../../../assets/svg/calendar";
 
-export const OrderTransFirst = () => {
+export const OrderTransFirst = ({ navigation }) => {
   const [countryLoad, setCountryLoad] = useState("");
   const [regionLoad, setRegionLoad] = useState("");
   const [cityLoad, setCityLoad] = useState("");
@@ -32,247 +31,493 @@ export const OrderTransFirst = () => {
   const [locations, setLocations] = useState({});
   const [forwarder, setForwarder] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [qtyLoaders, setQtyLoaders] = useState();
+  const [phone, setPhone] = useState();
+  const [selectedPayMetod, setSelectedPayMetod] = useState();
 
   //Date Picker attributes
-  const [range, setRange] = useState({
+  //Load
+  const [rangeLoad, setRangeLoad] = useState({
     startDate: null,
     endDate: null,
   });
-  const [isOpenDate, setIsOpenDate] = useState(false);
+  const [isOpenLoadDate, setIsOpenLoadDate] = useState(false);
 
-  const onDismissDate = useCallback(() => {
-    setIsOpenDate(false);
-  }, [setIsOpenDate]);
+  const onDismissLoadDate = useCallback(() => {
+    setIsOpenLoadDate(false);
+  }, [setIsOpenLoadDate]);
 
-  const onConfirmDate = useCallback(
+  const onConfirmLoadDate = useCallback(
     ({ startDate, endDate }) => {
-      setIsOpenDate(false);
-      setRange({ startDate, endDate });
+      setIsOpenLoadDate(false);
+      setRangeLoad({ startDate, endDate });
     },
-    [setIsOpenDate, setRange]
+    [setIsOpenLoadDate, setRangeLoad]
   );
-  //End of Date Picker
-  //Time Picker
-  const [isOpenTime, setIsOpenTime] = useState(false);
-  const [time, setTime] = useState({ hours: "12", minutes: "00" });
-  const onDismissTime = useCallback(() => {
-    setIsOpenTime(false);
-  }, [setIsOpenTime]);
+  //Unload
+  const [rangeUnload, setRangeUnload] = useState({
+    startDate: null,
+    endDate: null,
+  });
+  const [isOpenUnloadDate, setIsOpenUnloadDate] = useState(false);
 
-  const onConfirmTime = useCallback(
-    ({ hours, minutes }) => {
-      setIsOpenTime(false);
-      setTime({ hours, minutes });
+  const onDismissUnloadDate = useCallback(() => {
+    setIsOpenUnloadDate(false);
+  }, [setIsOpenUnloadDate]);
+
+  const onConfirmUnloadDate = useCallback(
+    ({ startDate, endDate }) => {
+      setIsOpenUnloadDate(false);
+      setRangeUnload({ startDate, endDate });
     },
-    [setIsOpenTime]
+    [setIsOpenUnloadDate, setRangeUnload]
   );
+  //End of Date Picker attributes
+  //Time Picker
+  const [isOpenLoadTime, setIsOpenLoadTime] = useState(false);
+  const [timeLoad, setTimeLoad] = useState({ hours: "12", minutes: "00" });
+  const onDismissLoadTime = useCallback(() => {
+    setIsOpenLoadTime(false);
+  }, [setIsOpenLoadTime]);
+
+  const onConfirmLoadTime = useCallback(
+    ({ hours, minutes }) => {
+      setIsOpenLoadTime(false);
+      setTimeLoad({ hours, minutes });
+    },
+    [setIsOpenLoadTime]
+  );
+  //Unload
+  const [isOpenUnloadTime, setIsOpenUnloadTime] = useState(false);
+  const [timeUnload, setTimeUnload] = useState({ hours: "12", minutes: "00" });
+  const onDismissUnloadTime = useCallback(() => {
+    setIsOpenUnloadTime(false);
+  }, [setIsOpenUnloadTime]);
+
+  const onConfirmUnloadTime = useCallback(
+    ({ hours, minutes }) => {
+      setIsOpenUnloadTime(false);
+      setTimeUnload({ hours, minutes });
+    },
+    [setIsOpenUnloadTime]
+  );
+  //End of Time Picker attributes
+
+  //Loaders Dropdown attributes
+  const [openLoadersInput, setOpenLoadersInput] = useState(false);
+  const [valueLoadersInput, setValueLoadersInput] = useState(2);
+  const [itemsLoadersInput, setItemsLoadersInput] = useState([
+    { label: "2 год", value: 2 },
+    { label: "4 год", value: 4 },
+    { label: "6 год", value: 6 },
+  ]);
+
+  const handleLoadersInput = (value) => {
+    const onlyNumeric = value.replace(/[^0-9]/g, "");
+    setQtyLoaders(onlyNumeric);
+  };
+
+  const handlePaymentSelect = (option) => {
+    setSelectedPayMetod(option);
+  };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <DatePickerModal
         locale="uk"
         mode="range"
-        visible={isOpenDate}
-        onDismiss={onDismissDate}
-        startDate={range.startDate}
-        endDate={range.endDate}
-        onConfirm={onConfirmDate}
+        visible={isOpenLoadDate}
+        onDismiss={onDismissLoadDate}
+        startDate={rangeLoad.startDate}
+        endDate={rangeLoad.endDate}
+        onConfirm={onConfirmLoadDate}
+        startLabel={"Від"}
+        endLabel={"До"}
+      />
+      <DatePickerModal
+        locale="uk"
+        mode="range"
+        visible={isOpenUnloadDate}
+        onDismiss={onDismissUnloadDate}
+        startDate={rangeUnload.startDate}
+        endDate={rangeUnload.endDate}
+        onConfirm={onConfirmUnloadDate}
         startLabel={"Від"}
         endLabel={"До"}
       />
       <TimePickerModal
         locale="uk"
-        visible={isOpenTime}
-        onDismiss={onDismissTime}
-        onConfirm={onConfirmTime}
+        visible={isOpenLoadTime}
+        onDismiss={onDismissLoadTime}
+        onConfirm={onConfirmLoadTime}
         label="Оберіть час"
         cancelLabel="Закрити"
         confirmLabel="Зберегти"
         hours={12}
         minutes={0}
       />
-      <View styles={styles.container}>
-        <ScrollView>
-          <View>
-            <Text style={styles.titleH1}>Загрузка</Text>
-          </View>
-          <Text style={styles.titleH2}>Місце</Text>
-          <View style={styles.inputWrap}>
-            <Text style={styles.lable}>Країна</Text>
-            <TextInput
-              style={styles.adressInput}
-              placeholder="Україна"
-              onChangeText={setCountryLoad}
-              value={countryLoad}
-            />
-          </View>
-          <View style={styles.inputWrap}>
-            <Text style={styles.lable}>Область</Text>
-            <TextInput
-              style={styles.adressInput}
-              placeholder="Київська"
-              onChangeText={setRegionLoad}
-              value={regionLoad}
-            />
-          </View>
-          <View style={styles.inputWrap}>
-            <Text style={styles.lable}>Місто</Text>
-            <TextInput
-              style={styles.adressInput}
-              placeholder="Київ"
-              onChangeText={setCityLoad}
-              value={cityLoad}
-            />
-          </View>
+      <TimePickerModal
+        locale="uk"
+        visible={isOpenUnloadTime}
+        onDismiss={onDismissUnloadTime}
+        onConfirm={onConfirmUnloadTime}
+        label="Оберіть час"
+        cancelLabel="Закрити"
+        confirmLabel="Зберегти"
+        hours={12}
+        minutes={0}
+      />
+      <ScrollView>
+        <View>
+          <Text style={styles.titleH1}>Загрузка</Text>
+        </View>
+        <Text style={styles.titleH2}>Місце</Text>
+        <View style={styles.inputWrap}>
+          <Text style={styles.lable}>Країна</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Україна"
+            onChangeText={setCountryLoad}
+            value={countryLoad}
+          />
+        </View>
+        <View style={styles.inputWrap}>
+          <Text style={styles.lable}>Область</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Київська"
+            onChangeText={setRegionLoad}
+            value={regionLoad}
+          />
+        </View>
+        <View style={styles.inputWrap}>
+          <Text style={styles.lable}>Місто</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Київ"
+            onChangeText={setCityLoad}
+            value={cityLoad}
+          />
+        </View>
 
-          <View style={styles.inputWrap}>
-            <Text style={styles.lable}>Адреса</Text>
-            <View style={styles.googleInputWrap}>
-              <GooglePlacesAutocomplete
-                placeholder="Антоновича, 176"
-                returnKeyType={"default"}
-                fetchDetails={true}
-                currentLocation={false}
-                isRowScrollable={true}
-                keepResultsAfterBlur={false}
-                enablePoweredByContainer={false}
-                styles={styles.googlePlaces}
-                onPress={(data, details) => {
-                  console.log(data, details);
-                }}
-                query={{
-                  key: "",
-                  language: "en",
-                  components: "country:ua",
-                }}
+        <View style={styles.inputWrap}>
+          <Text style={styles.lable}>Адреса</Text>
+          <View style={styles.googleInputWrap}>
+            <GooglePlacesAutocomplete
+              placeholder="Антоновича, 176"
+              returnKeyType={"default"}
+              fetchDetails={true}
+              currentLocation={false}
+              isRowScrollable={true}
+              keepResultsAfterBlur={false}
+              enablePoweredByContainer={false}
+              styles={styles.googlePlaces}
+              onPress={(data, details) => {
+                console.log(data, details);
+              }}
+              query={{
+                key: "",
+                language: "en",
+                components: "country:ua",
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.dateBlock}>
+          <Text style={styles.titleH2}>Дата і час прибуття</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View>
+              <Text style={styles.lable}>Дата</Text>
+              <TouchableWithoutFeedback onPress={() => setIsOpenLoadDate(true)}>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.dateInput}>{`${
+                    rangeLoad.startDate
+                      ? rangeLoad.startDate
+                          .toJSON()
+                          .slice(0, 10)
+                          .split("-")
+                          .reverse()
+                          .join(".")
+                      : "Оберіть"
+                  } - ${
+                    rangeLoad.endDate
+                      ? rangeLoad.endDate
+                          .toJSON()
+                          .slice(0, 10)
+                          .split("-")
+                          .reverse()
+                          .join(".")
+                      : "Оберіть"
+                  }`}</Text>
+                  <Calendar />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+            <View>
+              <Text style={styles.lable}>Час</Text>
+              <TouchableWithoutFeedback onPress={() => setIsOpenLoadTime(true)}>
+                <Text
+                  style={styles.timeInput}
+                >{`${timeLoad.hours}:${timeLoad.minutes}`}</Text>
+              </TouchableWithoutFeedback>
+            </View>
+          </View>
+        </View>
+        <View style={styles.separator}></View>
+        <View>
+          <Text style={styles.titleH1}>Вигрузка</Text>
+        </View>
+        <Text style={styles.titleH2}>Місце</Text>
+        <View style={styles.inputWrap}>
+          <Text style={styles.lable}>Країна</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Україна"
+            onChangeText={setCountryUnload}
+            value={countryUnload}
+          />
+        </View>
+        <View style={styles.inputWrap}>
+          <Text style={styles.lable}>Область</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Київська"
+            onChangeText={setRegionUnload}
+            value={regionUnload}
+          />
+        </View>
+        <View style={styles.inputWrap}>
+          <Text style={styles.lable}>Місто</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Київ"
+            onChangeText={setCityUnload}
+            value={cityUnload}
+          />
+        </View>
+        <View style={styles.inputWrap}>
+          <Text style={styles.lable}>Адреса</Text>
+          <View style={styles.googleInputWrap}>
+            <GooglePlacesAutocomplete
+              placeholder="Антоновича, 176"
+              returnKeyType={"default"}
+              fetchDetails={true}
+              currentLocation={false}
+              isRowScrollable={true}
+              keepResultsAfterBlur={false}
+              enablePoweredByContainer={false}
+              styles={styles.googlePlaces}
+              onPress={(data, details) => {
+                console.log(data, details);
+              }}
+              query={{
+                key: "",
+                language: "en",
+                components: "country:ua",
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.dateBlock}>
+          <Text style={styles.titleH2}>Дата і час прибуття</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View>
+              <Text style={styles.lable}>Дата</Text>
+              <TouchableWithoutFeedback
+                onPress={() => setIsOpenUnloadDate(true)}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.dateInput}>{`${
+                    rangeUnload.startDate
+                      ? rangeUnload.startDate
+                          .toJSON()
+                          .slice(0, 10)
+                          .split("-")
+                          .reverse()
+                          .join(".")
+                      : "Оберіть"
+                  } - ${
+                    rangeUnload.endDate
+                      ? rangeUnload.endDate
+                          .toJSON()
+                          .slice(0, 10)
+                          .split("-")
+                          .reverse()
+                          .join(".")
+                      : "Оберіть"
+                  }`}</Text>
+                  <Calendar />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+            <View>
+              <Text style={styles.lable}>Час</Text>
+              <TouchableWithoutFeedback
+                onPress={() => setIsOpenUnloadTime(true)}
+              >
+                <Text
+                  style={styles.timeInput}
+                >{`${timeUnload.hours}:${timeUnload.minutes}`}</Text>
+              </TouchableWithoutFeedback>
+            </View>
+          </View>
+        </View>
+        <View style={styles.separator}></View>
+        <View>
+          <TouchableOpacity
+            onPress={() => setForwarder(!forwarder)}
+            style={[styles.checkbox, { marginBottom: 25 }]}
+          >
+            <View style={styles.checkboxContainer}>
+              {forwarder && <View style={styles.checkedFill} />}
+            </View>
+            <Text style={styles.titleH1}>Послуга експедитора</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setLoader(!loader)}
+            style={[styles.checkbox, { marginBottom: 12 }]}
+          >
+            <View style={styles.checkboxContainer}>
+              {loader && <View style={styles.checkedFill} />}
+            </View>
+            <Text style={styles.titleH1}>Послуга грузчиків</Text>
+          </TouchableOpacity>
+        </View>
+        {loader && (
+          <View style={styles.loadersInputWrap}>
+            <View style={{ marginRight: 20 }}>
+              <Text style={styles.lable}>Кількість грузчиків</Text>
+              <TextInput
+                keyboardType="numeric"
+                style={styles.input}
+                onChangeText={handleLoadersInput}
+                value={qtyLoaders}
+              ></TextInput>
+            </View>
+            <View>
+              <Text style={styles.lable}>Зайнятість</Text>
+              <DropDownPicker
+                dropDownDirection="TOP"
+                style={styles.loaderPicker}
+                textStyle={styles.loaderPickerText}
+                containerStyle={styles.loaderPickerContainer}
+                open={openLoadersInput}
+                value={valueLoadersInput}
+                items={itemsLoadersInput}
+                setOpen={setOpenLoadersInput}
+                setValue={setValueLoadersInput}
+                setItems={setItemsLoadersInput}
               />
             </View>
           </View>
-
-          <View style={styles.dateBlock}>
-            <Text style={styles.titleH2}>Дата і час прибуття</Text>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View>
-                <Text style={styles.lable}>Дата</Text>
-                <TouchableWithoutFeedback onPress={() => setIsOpenDate(true)}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={styles.dateInput}>{`${
-                      range.startDate
-                        ? range.startDate
-                            .toJSON()
-                            .slice(0, 10)
-                            .split("-")
-                            .reverse()
-                            .join(".")
-                        : "Оберіть"
-                    } - ${
-                      range.endDate
-                        ? range.endDate
-                            .toJSON()
-                            .slice(0, 10)
-                            .split("-")
-                            .reverse()
-                            .join(".")
-                        : "Оберіть"
-                    }`}</Text>
-                    <Calendar />
-                  </View>
-                </TouchableWithoutFeedback>
-              </View>
-              <View>
-                <Text style={styles.lable}>Час</Text>
-                <TouchableWithoutFeedback onPress={() => setIsOpenTime(true)}>
-                  <Text
-                    style={styles.timeInput}
-                  >{`${time.hours}:${time.minutes}`}</Text>
-                </TouchableWithoutFeedback>
-              </View>
-            </View>
+        )}
+        <View style={styles.separator}></View>
+        <View style={{ marginBottom: 20 }}>
+          <View style={{ marginBottom: 15 }}>
+            <Text style={styles.titleH1}>Контактні дані</Text>
           </View>
-          <View style={styles.separator}></View>
-          <View>
-            <Text style={styles.titleH1}>Вигрузка</Text>
-          </View>
-          <Text style={styles.titleH2}>Місце</Text>
           <View style={styles.inputWrap}>
-            <Text style={styles.lable}>Країна</Text>
+            <Text style={styles.lable}>Прізвище</Text>
             <TextInput
-              style={styles.adressInput}
-              placeholder="Україна"
+              style={styles.input}
+              placeholder="Валунов"
               onChangeText={setCountryUnload}
               value={countryUnload}
             />
           </View>
           <View style={styles.inputWrap}>
-            <Text style={styles.lable}>Область</Text>
+            <Text style={styles.lable}>Ім’я</Text>
             <TextInput
-              style={styles.adressInput}
-              placeholder="Київська"
+              style={styles.input}
+              placeholder="Валентин"
+              onChangeText={setCountryUnload}
+              value={countryUnload}
+            />
+          </View>
+          <View style={styles.inputWrap}>
+            <Text style={styles.lable}>По-батькові</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Валерійович"
               onChangeText={setRegionUnload}
               value={regionUnload}
             />
           </View>
           <View style={styles.inputWrap}>
-            <Text style={styles.lable}>Місто</Text>
-            <TextInput
-              style={styles.adressInput}
-              placeholder="Київ"
-              onChangeText={setCityUnload}
-              value={cityUnload}
+            <Text style={styles.lable}>Номер телефону</Text>
+            <MaskInput
+              style={styles.input}
+              keyboardType="phone-pad"
+              placeholder="+38 (097) 333 3333"
+              value={phone}
+              onChangeText={(masked, unmasked) => {
+                setPhone(masked);
+              }}
+              mask={phoneMask}
             />
           </View>
-          <View style={styles.inputWrap}>
-            <Text style={styles.lable}>Адреса</Text>
-            <View style={styles.googleInputWrap}>
-              <GooglePlacesAutocomplete
-                placeholder="Антоновича, 176"
-                returnKeyType={"default"}
-                fetchDetails={true}
-                currentLocation={false}
-                isRowScrollable={true}
-                keepResultsAfterBlur={false}
-                enablePoweredByContainer={false}
-                styles={styles.googlePlaces}
-                onPress={(data, details) => {
-                  console.log(data, details);
-                }}
-                query={{
-                  key: "",
-                  language: "en",
-                  components: "country:ua",
-                }}
-              />
+        </View>
+        <View style={{ marginBottom: 15 }}>
+          <Text style={styles.titleH1}>Оплата</Text>
+        </View>
+        <View style={styles.payChoiceThumb}>
+          <TouchableOpacity
+            onPress={() => handlePaymentSelect("full")}
+            style={[styles.payChoiceCheckbox]}
+          >
+            <View style={styles.PayChoiceCheckboxContainer}>
+              {selectedPayMetod === "full" && (
+                <View style={styles.payChoiceCheckedFill} />
+              )}
             </View>
-          </View>
-          <View style={styles.separator}></View>
-          <View>
-            <TouchableOpacity
-              onPress={() => setForwarder(!forwarder)}
-              style={styles.checkbox}
-            >
-              <View
-                style={[styles.checkboxContainer, forwarder && styles.checked]}
-              >
-                {forwarder && <View style={styles.checkboxFill} />}
+            <Text style={styles.payChoiceText}>Повна</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.payChoiceThumb}>
+          <TouchableOpacity
+            onPress={() => handlePaymentSelect("parts")}
+            style={[styles.payChoiceCheckbox]}
+          >
+            <View style={styles.PayChoiceCheckboxContainer}>
+              {selectedPayMetod === "parts" && (
+                <View style={styles.payChoiceCheckedFill} />
+              )}
+            </View>
+            <Text style={styles.payChoiceText}>Частинами</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.payChoiceThumb, styles.payChoiceThumbPassive]}>
+          <TouchableOpacity
+            disabled={true}
+            onPress={() => handlePaymentSelect("moow")}
+            style={[
+              styles.payChoiceCheckbox,
+              { justifyContent: "space-between" },
+            ]}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <View style={styles.PayChoiceCheckboxContainer}>
+                {selectedPayMetod === "moow" && (
+                  <View style={styles.payChoiceCheckedFill} />
+                )}
               </View>
-              <Text style={styles.label}>Check me!</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setLoader(!loader)}
-              style={styles.checkbox}
-            >
-              <View
-                style={[styles.checkboxContainer, loader && styles.checked]}
-              >
-                {loader && <View style={styles.checkboxFill} />}
-              </View>
-              <Text style={styles.label}>Check me!</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
+              <Text style={styles.payChoiceText}>Через MOOW</Text>
+            </View>
+            <Text style={styles.soonText}>скоро</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("OrderTransSecond")}
+          >
+            <Btn>Далі</Btn>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -280,7 +525,8 @@ export const OrderTransFirst = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    paddingVertical: 35,
+    paddingHorizontal: 20,
   },
   titleH1: {
     fontFamily: FontFamily.bold,
@@ -290,30 +536,24 @@ const styles = StyleSheet.create({
   },
   titleH2: {
     fontFamily: FontFamily.bold,
-    color: Color.black500,
-    fontSize: FontSize.boldH3_size,
-    fontSize: 16,
+    color: Color.mainBlack,
+    fontSize: FontSize.H3_size,
     lineHeight: 20,
     margin: 10,
   },
   lable: {
     fontFamily: FontFamily.medium,
-    color: Color.black500,
+    color: Color.mainBlack,
     fontWeight: "500",
     textAlign: "left",
     fontSize: 14,
     lineHeight: 18,
+    marginBottom: 3,
   },
   inputWrap: {
     marginBottom: 15,
   },
-  textTypo1: {
-    width: 280,
-    textAlign: "left",
-    fontFamily: FontFamily.bold,
-    fontWeight: "700",
-  },
-  adressInput: {
+  input: {
     borderBottomWidth: 1,
     borderColor: Color.purple,
     fontFamily: FontFamily.regular,
@@ -330,7 +570,7 @@ const styles = StyleSheet.create({
     textInput: {
       height: 30,
       fontFamily: FontFamily.regular,
-      color: Color.black500,
+      color: Color.mainBlack,
       fontSize: 16,
       borderBottomWidth: 1,
       borderColor: Color.purple,
@@ -351,7 +591,7 @@ const styles = StyleSheet.create({
   dateInput: {
     borderBottomWidth: 1,
     borderColor: Color.purple,
-    minWidth: 184,
+    minWidth: 185,
     fontFamily: FontFamily.regular,
     fontSize: 16,
     lineHeight: 20,
@@ -367,7 +607,6 @@ const styles = StyleSheet.create({
   separator: {
     backgroundColor: Color.separatorColor,
     height: 1,
-    width: "100%",
     marginTop: 20,
     marginBottom: 20,
   },
@@ -376,24 +615,77 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   checkboxContainer: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
     borderWidth: 2,
-    borderColor: "gray",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
+    borderRadius: 4,
+    borderStyle: "solid",
+    borderColor: Color.grey,
   },
-  checked: {
-    backgroundColor: "blue",
+  checkedFill: {
+    width: 16.5,
+    height: 16.5,
+    backgroundColor: Color.purple,
+    borderRadius: 2,
   },
-  checkboxFill: {
-    width: 12,
-    height: 12,
-    backgroundColor: "white",
+  loadersInputWrap: {
+    flexDirection: "row",
   },
-  label: {
+  loaderPicker: {
+    borderRadius: 0,
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: Color.purple,
+    backgroundColor: "#ffffff",
+  },
+  loaderPickerText: {
     fontSize: 16,
-    color: "black",
+    fontFamily: FontFamily.regular,
+  },
+  loaderPickerContainer: {
+    width: 100,
+    borderColor: Color.purple,
+  },
+  payChoiceThumb: {
+    paddingHorizontal: 15,
+    justifyContent: "center",
+    marginBottom: 15,
+    height: 50,
+    borderRadius: 5,
+    backgroundColor: Color.bgPurple,
+  },
+  payChoiceThumbPassive: {
+    backgroundColor: Color.bgGrey,
+    marginBottom: 20,
+  },
+  payChoiceCheckbox: { flexDirection: "row", alignItems: "center" },
+  PayChoiceCheckboxContainer: {
+    width: 24,
+    height: 24,
+    borderWidth: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+    borderRadius: 100,
+    borderStyle: "solid",
+    borderColor: Color.grey,
+  },
+  payChoiceCheckedFill: {
+    width: 18,
+    height: 18,
+    backgroundColor: Color.purple,
+    borderRadius: 100,
+  },
+  payChoiceText: {
+    color: Color.secondBlack,
+    fontFamily: FontFamily.bold,
+    fontSize: 16,
+  },
+  soonText: {
+    fontFamily: FontFamily.regular,
+    color: Color.purple,
   },
 });

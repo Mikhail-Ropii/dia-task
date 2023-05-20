@@ -1,14 +1,15 @@
+import { View, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import { OrderTransFirst } from "./nestedScreens/OrderTransFirst";
 import { OrderTransSecond } from "./nestedScreens/OrderTransSecond";
+import { FontFamily } from "../../GlobalStyles";
 
-export const OrderScreen = ({ navigation }) => {
+export const OrderScreen = () => {
   const NestedScreen = createStackNavigator();
 
   const headerTitleStyle = {
-    fontFamily: "Mulish_regular",
-    fontWeight: 700,
+    fontFamily: FontFamily.bold,
     fontSize: 24,
     lineHeight: 30,
   };

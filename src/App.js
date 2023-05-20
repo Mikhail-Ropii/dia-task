@@ -11,14 +11,6 @@ import Dashboard from "../assets/svg/dashboard.svg";
 import Chat from "../assets/svg/chat.svg";
 import More from "../assets/svg/more.svg";
 
-import {
-  View,
-  Text,
-  Pressable,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-
 export default function App() {
   const [fontsLoaded, error] = useFonts({
     Mulish_light: require("../assets/fonts/Mulish_Light.ttf"),
@@ -63,75 +55,54 @@ export default function App() {
 
   return (
     <NavigationContainer theme={theme}>
-      <View style={styles.container}>
-        <TabNav.Navigator
-          initialRouteName="Dashboard"
-          screenOptions={{
-            tabBarShowLabel: false,
-            tabBarStyle: { height: 71, paddingHorizontal: 40 },
+      <TabNav.Navigator
+        initialRouteName="Dashboard"
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarStyle: { height: 71, paddingHorizontal: 40 },
+        }}
+      >
+        <TabNav.Screen
+          options={{
+            headerShown: false,
+            tabBarIcon: (focused, color, size) => <Profile />,
           }}
-        >
-          <TabNav.Screen
-            options={{
-              headerShown: false,
-              tabBarIcon: (focused, color, size) => <Profile />,
-            }}
-            name="Profile"
-            component={Other}
-          />
-          <TabNav.Screen
-            options={{
-              headerShown: false,
-              tabBarIcon: (focused, color, size) => <Search />,
-            }}
-            name="Search"
-            component={Other}
-          />
-          <TabNav.Screen
-            options={{
-              headerShown: false,
-              tabBarIcon: (focused, color, size) => <Dashboard />,
-            }}
-            name="Dashboard"
-            component={OrderScreen}
-          />
-          <TabNav.Screen
-            options={{
-              headerShown: false,
-              tabBarIcon: (focused, color, size) => <Chat />,
-            }}
-            name="Chat"
-            component={Other}
-          />
-          <TabNav.Screen
-            options={{
-              headerShown: false,
-              tabBarIcon: (focused, color, size) => <More />,
-            }}
-            name="More"
-            component={Other}
-          />
-        </TabNav.Navigator>
-        {/* <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name="CheckOutCheckTrans"
-          component={OrderTransFirst}
-          options={{ headerShown: false }}
+          name="Profile"
+          component={Other}
         />
-        <Stack.Screen
-          name="CheckOutTech"
-          component={CheckOutTech}
-          options={{ headerShown: false }}
+        <TabNav.Screen
+          options={{
+            headerShown: false,
+            tabBarIcon: (focused, color, size) => <Search />,
+          }}
+          name="Search"
+          component={Other}
         />
-      </Stack.Navigator> */}
-      </View>
+        <TabNav.Screen
+          options={{
+            headerShown: false,
+            tabBarIcon: (focused, color, size) => <Dashboard />,
+          }}
+          name="Dashboard"
+          component={OrderScreen}
+        />
+        <TabNav.Screen
+          options={{
+            headerShown: false,
+            tabBarIcon: (focused, color, size) => <Chat />,
+          }}
+          name="Chat"
+          component={Other}
+        />
+        <TabNav.Screen
+          options={{
+            headerShown: false,
+            tabBarIcon: (focused, color, size) => <More />,
+          }}
+          name="More"
+          component={Other}
+        />
+      </TabNav.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
-});

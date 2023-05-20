@@ -19,17 +19,17 @@ export const FontSize = {
 };
 /* Colors */
 export const Color = {
-  bgL: "#fefefe",
-  shadesOfMOOW300: "#7e7e7e",
-  black500: "#262626",
+  mainLight: "#fefefe",
+  grey: "#7e7e7e",
+  mainBlack: "#262626",
   purple500: "#1f1f37",
-  black600: "#171717",
+  secondBlack: "#171717",
   labelColorLightPrimary: "#000",
-  black100: "#ebebeb",
+  bgGrey: "#ebebeb",
   purple: "#665cd1",
   separatorColor: "#c4c4c4",
   black400: "#5a5a5a",
-  purple100: "#f1f0ff",
+  bgPurple: "#f1f0ff",
   statusError: "#fc7d72",
 };
 /* Paddings */
