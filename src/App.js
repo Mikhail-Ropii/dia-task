@@ -4,6 +4,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { OrderScreen } from "./screens/OrderScreen";
 import { Other } from "./screens/Other";
 import { registerTranslation } from "react-native-paper-dates";
+import { KeyboardAvoidingView } from "react-native";
+
 //svg
 import Profile from "../assets/svg/profile.svg";
 import Search from "../assets/svg/search.svg";
@@ -54,55 +56,60 @@ export default function App() {
   };
 
   return (
-    <NavigationContainer theme={theme}>
-      <TabNav.Navigator
-        initialRouteName="Dashboard"
-        screenOptions={{
-          tabBarShowLabel: false,
-          tabBarStyle: { height: 71, paddingHorizontal: 40 },
-        }}
-      >
-        <TabNav.Screen
-          options={{
-            headerShown: false,
-            tabBarIcon: (focused, color, size) => <Profile />,
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <NavigationContainer theme={theme}>
+        <TabNav.Navigator
+          initialRouteName="Dashboard"
+          screenOptions={{
+            tabBarShowLabel: false,
+            tabBarStyle: { height: 71, paddingHorizontal: 40 },
           }}
-          name="Profile"
-          component={Other}
-        />
-        <TabNav.Screen
-          options={{
-            headerShown: false,
-            tabBarIcon: (focused, color, size) => <Search />,
-          }}
-          name="Search"
-          component={Other}
-        />
-        <TabNav.Screen
-          options={{
-            headerShown: false,
-            tabBarIcon: (focused, color, size) => <Dashboard />,
-          }}
-          name="Dashboard"
-          component={OrderScreen}
-        />
-        <TabNav.Screen
-          options={{
-            headerShown: false,
-            tabBarIcon: (focused, color, size) => <Chat />,
-          }}
-          name="Chat"
-          component={Other}
-        />
-        <TabNav.Screen
-          options={{
-            headerShown: false,
-            tabBarIcon: (focused, color, size) => <More />,
-          }}
-          name="More"
-          component={Other}
-        />
-      </TabNav.Navigator>
-    </NavigationContainer>
+        >
+          <TabNav.Screen
+            options={{
+              headerShown: false,
+              tabBarIcon: (focused, color, size) => <Profile />,
+            }}
+            name="Profile"
+            component={Other}
+          />
+          <TabNav.Screen
+            options={{
+              headerShown: false,
+              tabBarIcon: (focused, color, size) => <Search />,
+            }}
+            name="Search"
+            component={Other}
+          />
+          <TabNav.Screen
+            options={{
+              headerShown: false,
+              tabBarIcon: (focused, color, size) => <Dashboard />,
+            }}
+            name="Dashboard"
+            component={OrderScreen}
+          />
+          <TabNav.Screen
+            options={{
+              headerShown: false,
+              tabBarIcon: (focused, color, size) => <Chat />,
+            }}
+            name="Chat"
+            component={Other}
+          />
+          <TabNav.Screen
+            options={{
+              headerShown: false,
+              tabBarIcon: (focused, color, size) => <More />,
+            }}
+            name="More"
+            component={Other}
+          />
+        </TabNav.Navigator>
+      </NavigationContainer>
+    </KeyboardAvoidingView>
   );
 }

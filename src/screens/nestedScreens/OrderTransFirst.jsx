@@ -9,8 +9,10 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
+
 //Components
 import { Btn } from "../../components/Btn";
+
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -20,6 +22,7 @@ import { phoneMask } from "../../helpers/phoneMask";
 import { Color, FontFamily, FontSize } from "../../../GlobalStyles";
 //SVG
 import Calendar from "../../../assets/svg/calendar";
+import Arrow from "../../../assets/svg/arrow";
 
 export const OrderTransFirst = ({ navigation }) => {
   const [countryLoad, setCountryLoad] = useState("");
@@ -29,8 +32,9 @@ export const OrderTransFirst = ({ navigation }) => {
   const [regionUnload, setRegionUnload] = useState("");
   const [cityUnload, setCityUnload] = useState("");
   const [locations, setLocations] = useState({});
+  const [searchAddress, setSearchAddress] = useState("");
   const [forwarder, setForwarder] = useState(false);
-  const [loader, setLoader] = useState(false);
+  const [needLoader, setNeedLoader] = useState(false);
   const [qtyLoaders, setQtyLoaders] = useState();
   const [phone, setPhone] = useState();
   const [selectedPayMetod, setSelectedPayMetod] = useState();
@@ -123,104 +127,117 @@ export const OrderTransFirst = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <DatePickerModal
-        locale="uk"
-        mode="range"
-        visible={isOpenLoadDate}
-        onDismiss={onDismissLoadDate}
-        startDate={rangeLoad.startDate}
-        endDate={rangeLoad.endDate}
-        onConfirm={onConfirmLoadDate}
-        startLabel={"Від"}
-        endLabel={"До"}
-      />
-      <DatePickerModal
-        locale="uk"
-        mode="range"
-        visible={isOpenUnloadDate}
-        onDismiss={onDismissUnloadDate}
-        startDate={rangeUnload.startDate}
-        endDate={rangeUnload.endDate}
-        onConfirm={onConfirmUnloadDate}
-        startLabel={"Від"}
-        endLabel={"До"}
-      />
-      <TimePickerModal
-        locale="uk"
-        visible={isOpenLoadTime}
-        onDismiss={onDismissLoadTime}
-        onConfirm={onConfirmLoadTime}
-        label="Оберіть час"
-        cancelLabel="Закрити"
-        confirmLabel="Зберегти"
-        hours={12}
-        minutes={0}
-      />
-      <TimePickerModal
-        locale="uk"
-        visible={isOpenUnloadTime}
-        onDismiss={onDismissUnloadTime}
-        onConfirm={onConfirmUnloadTime}
-        label="Оберіть час"
-        cancelLabel="Закрити"
-        confirmLabel="Зберегти"
-        hours={12}
-        minutes={0}
-      />
       <ScrollView>
+        <DatePickerModal
+          locale="uk"
+          mode="range"
+          visible={isOpenLoadDate}
+          onDismiss={onDismissLoadDate}
+          startDate={rangeLoad.startDate}
+          endDate={rangeLoad.endDate}
+          onConfirm={onConfirmLoadDate}
+          startLabel={"Від"}
+          endLabel={"До"}
+        />
+        <DatePickerModal
+          locale="uk"
+          mode="range"
+          visible={isOpenUnloadDate}
+          onDismiss={onDismissUnloadDate}
+          startDate={rangeUnload.startDate}
+          endDate={rangeUnload.endDate}
+          onConfirm={onConfirmUnloadDate}
+          startLabel={"Від"}
+          endLabel={"До"}
+        />
+        <TimePickerModal
+          locale="uk"
+          visible={isOpenLoadTime}
+          onDismiss={onDismissLoadTime}
+          onConfirm={onConfirmLoadTime}
+          label="Оберіть час"
+          cancelLabel="Закрити"
+          confirmLabel="Зберегти"
+          hours={12}
+          minutes={0}
+        />
+        <TimePickerModal
+          locale="uk"
+          visible={isOpenUnloadTime}
+          onDismiss={onDismissUnloadTime}
+          onConfirm={onConfirmUnloadTime}
+          label="Оберіть час"
+          cancelLabel="Закрити"
+          confirmLabel="Зберегти"
+          hours={12}
+          minutes={0}
+        />
         <View>
           <Text style={styles.titleH1}>Загрузка</Text>
         </View>
         <Text style={styles.titleH2}>Місце</Text>
         <View style={styles.inputWrap}>
           <Text style={styles.lable}>Країна</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Україна"
-            onChangeText={setCountryLoad}
-            value={countryLoad}
-          />
+          <View style={styles.inputFlex}>
+            <TextInput
+              style={styles.input}
+              placeholder="Україна"
+              onChangeText={setCountryLoad}
+              value={countryLoad}
+            />
+            <Arrow />
+          </View>
         </View>
         <View style={styles.inputWrap}>
           <Text style={styles.lable}>Область</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Київська"
-            onChangeText={setRegionLoad}
-            value={regionLoad}
-          />
+          <View style={styles.inputFlex}>
+            <TextInput
+              style={styles.input}
+              placeholder="Київська"
+              onChangeText={setRegionLoad}
+              value={regionLoad}
+            />
+            <Arrow />
+          </View>
         </View>
         <View style={styles.inputWrap}>
           <Text style={styles.lable}>Місто</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Київ"
-            onChangeText={setCityLoad}
-            value={cityLoad}
-          />
+          <View style={styles.inputFlex}>
+            <TextInput
+              style={styles.input}
+              placeholder="Київ"
+              onChangeText={setCityLoad}
+              value={cityLoad}
+            />
+            <Arrow />
+          </View>
         </View>
-
         <View style={styles.inputWrap}>
           <Text style={styles.lable}>Адреса</Text>
           <View style={styles.googleInputWrap}>
-            <GooglePlacesAutocomplete
-              placeholder="Антоновича, 176"
-              returnKeyType={"default"}
-              fetchDetails={true}
-              currentLocation={false}
-              isRowScrollable={true}
-              keepResultsAfterBlur={false}
-              enablePoweredByContainer={false}
-              styles={styles.googlePlaces}
-              onPress={(data, details) => {
-                console.log(data, details);
-              }}
-              query={{
-                key: "",
-                language: "en",
-                components: "country:ua",
-              }}
-            />
+            <View style={styles.inputFlex}>
+              <GooglePlacesAutocomplete
+                placeholder="Антоновича, 176"
+                returnKeyType={"default"}
+                fetchDetails={true}
+                currentLocation={false}
+                isRowScrollable={true}
+                keepResultsAfterBlur={false}
+                enablePoweredByContainer={true}
+                debounce={200}
+                styles={styles.googlePlaces}
+                onPress={(data, details) => {
+                  console.log(data);
+                  console.log(details);
+                }}
+                query={{
+                  key: "AIzaSyCULHS6Xf14bTZsOq0Ii9648XhuHPPkGSk",
+                  language: "uk",
+                  components: "country:ua",
+                }}
+              />
+              <Arrow />
+            </View>
           </View>
         </View>
         <View style={styles.dateBlock}>
@@ -258,9 +275,11 @@ export const OrderTransFirst = ({ navigation }) => {
             <View>
               <Text style={styles.lable}>Час</Text>
               <TouchableWithoutFeedback onPress={() => setIsOpenLoadTime(true)}>
-                <Text
-                  style={styles.timeInput}
-                >{`${timeLoad.hours}:${timeLoad.minutes}`}</Text>
+                <Text style={styles.timeInput}>{`${timeLoad.hours
+                  .toString()
+                  .padStart(2, "0")}:${timeLoad.minutes
+                  .toString()
+                  .padStart(2, "0")}`}</Text>
               </TouchableWithoutFeedback>
             </View>
           </View>
@@ -272,52 +291,64 @@ export const OrderTransFirst = ({ navigation }) => {
         <Text style={styles.titleH2}>Місце</Text>
         <View style={styles.inputWrap}>
           <Text style={styles.lable}>Країна</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Україна"
-            onChangeText={setCountryUnload}
-            value={countryUnload}
-          />
+          <View style={styles.inputFlex}>
+            <TextInput
+              style={styles.input}
+              placeholder="Україна"
+              onChangeText={setCountryUnload}
+              value={countryUnload}
+            />
+            <Arrow />
+          </View>
         </View>
         <View style={styles.inputWrap}>
           <Text style={styles.lable}>Область</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Київська"
-            onChangeText={setRegionUnload}
-            value={regionUnload}
-          />
+          <View style={styles.inputFlex}>
+            <TextInput
+              style={styles.input}
+              placeholder="Київ"
+              onChangeText={setCityUnload}
+              value={cityUnload}
+            />
+            <Arrow />
+          </View>
         </View>
         <View style={styles.inputWrap}>
           <Text style={styles.lable}>Місто</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Київ"
-            onChangeText={setCityUnload}
-            value={cityUnload}
-          />
+          <View style={styles.inputFlex}>
+            <TextInput
+              style={styles.input}
+              placeholder="Київ"
+              onChangeText={setCityUnload}
+              value={cityUnload}
+            />
+            <Arrow />
+          </View>
         </View>
         <View style={styles.inputWrap}>
           <Text style={styles.lable}>Адреса</Text>
           <View style={styles.googleInputWrap}>
-            <GooglePlacesAutocomplete
-              placeholder="Антоновича, 176"
-              returnKeyType={"default"}
-              fetchDetails={true}
-              currentLocation={false}
-              isRowScrollable={true}
-              keepResultsAfterBlur={false}
-              enablePoweredByContainer={false}
-              styles={styles.googlePlaces}
-              onPress={(data, details) => {
-                console.log(data, details);
-              }}
-              query={{
-                key: "",
-                language: "en",
-                components: "country:ua",
-              }}
-            />
+            <View style={styles.inputFlex}>
+              <GooglePlacesAutocomplete
+                placeholder="Антоновича, 176"
+                returnKeyType={"default"}
+                fetchDetails={true}
+                currentLocation={false}
+                isRowScrollable={true}
+                keepResultsAfterBlur={false}
+                enablePoweredByContainer={false}
+                styles={styles.googlePlaces}
+                onPress={(data, details) => {
+                  console.log(data, details);
+                }}
+                query={{
+                  key: "",
+                  language: "uk",
+                  components: "country:ua",
+                }}
+              />
+              <Arrow />
+            </View>
           </View>
         </View>
         <View style={styles.dateBlock}>
@@ -359,9 +390,11 @@ export const OrderTransFirst = ({ navigation }) => {
               <TouchableWithoutFeedback
                 onPress={() => setIsOpenUnloadTime(true)}
               >
-                <Text
-                  style={styles.timeInput}
-                >{`${timeUnload.hours}:${timeUnload.minutes}`}</Text>
+                <Text style={styles.timeInput}>{`${timeUnload.hours
+                  .toString()
+                  .padStart(2, "0")}:${timeUnload.minutes
+                  .toString()
+                  .padStart(2, "0")}`}</Text>
               </TouchableWithoutFeedback>
             </View>
           </View>
@@ -378,16 +411,16 @@ export const OrderTransFirst = ({ navigation }) => {
             <Text style={styles.titleH1}>Послуга експедитора</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => setLoader(!loader)}
+            onPress={() => setNeedLoader(!needLoader)}
             style={[styles.checkbox, { marginBottom: 12 }]}
           >
             <View style={styles.checkboxContainer}>
-              {loader && <View style={styles.checkedFill} />}
+              {needLoader && <View style={styles.checkedFill} />}
             </View>
             <Text style={styles.titleH1}>Послуга грузчиків</Text>
           </TouchableOpacity>
         </View>
-        {loader && (
+        {needLoader && (
           <View style={styles.loadersInputWrap}>
             <View style={{ marginRight: 20 }}>
               <Text style={styles.lable}>Кількість грузчиків</Text>
@@ -510,9 +543,15 @@ export const OrderTransFirst = ({ navigation }) => {
             <Text style={styles.soonText}>скоро</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: "center", marginBottom: 35 }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("OrderTransSecond")}
+            activeOpacity={0.7}
+            onPress={() =>
+              navigation.navigate("OrderTransSecond", {
+                qtyLoaders,
+                timeForLoaders: valueLoadersInput,
+              })
+            }
           >
             <Btn>Далі</Btn>
           </TouchableOpacity>
@@ -525,7 +564,7 @@ export const OrderTransFirst = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 35,
+    paddingTop: 16,
     paddingHorizontal: 20,
   },
   titleH1: {
@@ -544,24 +583,25 @@ const styles = StyleSheet.create({
   lable: {
     fontFamily: FontFamily.medium,
     color: Color.mainBlack,
-    fontWeight: "500",
-    textAlign: "left",
-    fontSize: 14,
+    fontSize: FontSize.H4_size,
     lineHeight: 18,
     marginBottom: 3,
   },
   inputWrap: {
     marginBottom: 15,
   },
+  inputFlex: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   input: {
     borderBottomWidth: 1,
     borderColor: Color.purple,
     fontFamily: FontFamily.regular,
-    fontSize: 16,
+    fontSize: FontSize.H3_size,
     lineHeight: 20,
-  },
-  googleInputWrap: {
-    // marginBottom: 20,
+    marginRight: 6,
+    width: "95%",
   },
   googlePlaces: {
     textInputContainer: {
