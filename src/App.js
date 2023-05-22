@@ -5,13 +5,13 @@ import { OrderScreen } from "./screens/OrderScreen";
 import { Other } from "./screens/Other";
 import { registerTranslation } from "react-native-paper-dates";
 import { KeyboardAvoidingView } from "react-native";
-
 //svg
 import Profile from "../assets/svg/profile.svg";
 import Search from "../assets/svg/search.svg";
 import Dashboard from "../assets/svg/dashboard.svg";
 import Chat from "../assets/svg/chat.svg";
 import More from "../assets/svg/more.svg";
+import { Color } from "../GlobalStyles";
 
 export default function App() {
   const [fontsLoaded, error] = useFonts({
@@ -65,7 +65,13 @@ export default function App() {
           initialRouteName="Dashboard"
           screenOptions={{
             tabBarShowLabel: false,
-            tabBarStyle: { height: 71, paddingHorizontal: 40 },
+            tabBarStyle: {
+              height: 71,
+              paddingHorizontal: 40,
+              backgroundColor: Color.mainLight,
+              borderTopLeftRadius: 30,
+              borderTopRightRadius: 30,
+            },
           }}
         >
           <TabNav.Screen
