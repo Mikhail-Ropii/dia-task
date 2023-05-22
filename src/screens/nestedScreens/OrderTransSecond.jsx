@@ -11,16 +11,17 @@ import { Color, FontFamily, FontSize } from "../../../GlobalStyles";
 //Components
 import { Btn } from "../../components/Btn";
 import { Map } from "../../components/Map";
+//SVG
+import Star from "../../../assets/svg/star";
 
 export const OrderTransSecond = ({ route }) => {
   const { qtyLoaders, timeForLoaders } = route.params;
   const oneKmPrice = 20;
   const oneLoadersPrice = 100;
 
-  console.log(qtyLoaders, timeForLoaders);
-
   const sumLoaders = qtyLoaders * oneLoadersPrice;
   const costLoaders = oneLoadersPrice * qtyLoaders * timeForLoaders;
+  const sum = 2000 + 2000 + 2000 + costLoaders;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -39,7 +40,10 @@ export const OrderTransSecond = ({ route }) => {
           </View>
           <View>
             <Text style={styles.dateText}>22.02.2022</Text>
-            <Text style={styles.ratingText}>4.8</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Star />
+              <Text style={styles.ratingText}>4.8</Text>
+            </View>
             <Text>12 тис.</Text>
           </View>
         </View>
@@ -86,17 +90,21 @@ export const OrderTransSecond = ({ route }) => {
           <Text style={styles.dataText}>Послуги грузчиків</Text>
           <Text style={styles.dataPriceText}>{costLoaders} грн</Text>
         </View>
-        <View style={styles.lineWrap}>
-          <Text style={styles.dataText}>{qtyLoaders} грузчиків</Text>
-          <Text style={styles.dataPriceText}>{sumLoaders} грн/год</Text>
-        </View>
-        <View style={[styles.lineWrap, { marginBottom: 15 }]}>
-          <Text style={styles.dataText}>Зайнятість</Text>
-          <Text style={styles.dataPriceText}>{timeForLoaders} години</Text>
-        </View>
+        {qtyLoaders && (
+          <>
+            <View style={styles.lineWrap}>
+              <Text style={styles.dataText}>{qtyLoaders} грузчиків</Text>
+              <Text style={styles.dataPriceText}>{sumLoaders} грн/год</Text>
+            </View>
+            <View style={[styles.lineWrap, { marginBottom: 15 }]}>
+              <Text style={styles.dataText}>Зайнятість</Text>
+              <Text style={styles.dataPriceText}>{timeForLoaders} години</Text>
+            </View>
+          </>
+        )}
         <View style={{ marginBottom: 15 }}>
           <Text style={styles.boldText}>Повна ціна:</Text>
-          <Text style={styles.titleH1}>32 000 грн</Text>
+          <Text style={styles.titleH1}>{sum} грн</Text>
         </View>
         <View style={{ alignItems: "center", marginBottom: 35 }}>
           <TouchableOpacity activeOpacity={0.7}>

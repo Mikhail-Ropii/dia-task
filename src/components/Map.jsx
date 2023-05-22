@@ -5,8 +5,9 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Color, FontFamily, FontSize } from "../../GlobalStyles";
 import MapMarker from "../../assets/svg/marker";
 
+import { GOOGLE_MAPS_APIKEY } from "@env";
+
 export const Map = () => {
-  const GOOGLE_MAPS_APIKEY = "AIzaSyCULHS6Xf14bTZsOq0Ii9648XhuHPPkGSk";
   const origin = { latitude: 37.78825, longitude: -122.4324 };
   const destination = { latitude: 37.3352, longitude: -122.0096 };
 

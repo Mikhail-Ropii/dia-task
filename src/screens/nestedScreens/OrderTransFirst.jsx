@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
+import { GOOGLE_MAPS_APIKEY } from "@env";
 
 //Components
 import { Btn } from "../../components/Btn";
@@ -35,7 +36,7 @@ export const OrderTransFirst = ({ navigation }) => {
   const [searchAddress, setSearchAddress] = useState("");
   const [forwarder, setForwarder] = useState(false);
   const [needLoader, setNeedLoader] = useState(false);
-  const [qtyLoaders, setQtyLoaders] = useState();
+  const [qtyLoaders, setQtyLoaders] = useState(null);
   const [phone, setPhone] = useState();
   const [selectedPayMetod, setSelectedPayMetod] = useState();
 
@@ -231,7 +232,7 @@ export const OrderTransFirst = ({ navigation }) => {
                   console.log(details);
                 }}
                 query={{
-                  key: "AIzaSyCULHS6Xf14bTZsOq0Ii9648XhuHPPkGSk",
+                  key: GOOGLE_MAPS_APIKEY,
                   language: "uk",
                   components: "country:ua",
                 }}
@@ -342,7 +343,7 @@ export const OrderTransFirst = ({ navigation }) => {
                   console.log(data, details);
                 }}
                 query={{
-                  key: "",
+                  key: GOOGLE_MAPS_APIKEY,
                   language: "uk",
                   components: "country:ua",
                 }}
